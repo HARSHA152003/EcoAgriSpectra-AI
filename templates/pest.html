@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pest Detection - EcoAgriSpectra AI</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://kit.fontawesome.com/a076d05399.css"> <!-- Font Awesome -->
+    <style>
+        body {
+            background-image: url('../static/images/bg2.jpeg');
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            background-position: center center;
+            font-family: Arial, sans-serif;
+            color: #333;
+        }
+        .container {
+            max-width: 800px;
+            margin: auto;
+            margin-top: 20px;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 10px;
+        }
+        .navbar {
+            background-color: #343a40; /* Dark background color */
+            padding: 10px 0;
+        }
+        .navbar-brand {
+            font-size: 1.8rem; /* Adjusted for better visibility */
+        }
+        .navbar-dark .navbar-nav .nav-link {
+            color: rgba(255, 255, 255, 0.9);
+            margin-right: 10px; /* Adjust spacing between links */
+        }
+        .navbar-dark .navbar-nav .nav-link:hover {
+            color: rgba(255, 255, 255, 1);
+        }
+        .alert {
+            margin-top: 20px;
+        }
+        .image-container, .preview-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+        .preview-image, .output-image {
+            max-width: 100%;
+            max-height: 400px;
+            width: auto;
+            height: auto;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .result-text {
+            font-size: 1.2rem;
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #f8f9fa;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .image-result-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+        }
+        .image-result {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            width: 100%;
+        }
+        .result-output {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        .btn {
+            margin-top: 10px;
+        }
+        .reupload-btn-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation bar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <a class="navbar-brand" href="/">EcoAgriSpectra AI</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="/">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/disease-section">Crop Disease Detection</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/soil-section">Soil Health Monitoring</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/yield-section">Yield Prediction</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container">
+        <h1 class="text-center mt-5 mb-4">Pest Detection</h1>
+
+        <!-- Alert box -->
+        <div class="alert alert-info">
+            <strong>Alert!</strong> This model is under development. Higher the confidence value, the more reliable the result.
+        </div>
+
+        <!-- Choice between Capture or Upload -->
+        <div class="text-center mb-3">
+            <button id="captureChoice" class="btn btn-primary mr-2"><i class="fas fa-camera"></i> Capture Image</button>
+            <button id="uploadChoice" class="btn btn-secondary"><i class="fas fa-file-upload"></i> Upload Image</button>
+        </div>
+
+        <!-- Capture section -->
+        <div id="captureSection" style="display: none;">
+            <div class="text-center mb-3">
+                <button id="startCapture" class="btn btn-primary capture-btn">Start Capture</button>
+                <button id="stopCapture" class="btn btn-danger capture-btn" style="display: none;">Stop Capture</button>
+                <button id="captureImage" class="btn btn-success capture-btn" style="display: none;">Capture Photo</button>
+            </div>
+            <div class="preview-container">
+                <video id="cameraPreview" class="preview-image" style="display: none;"></video>
+                <canvas id="canvasPreview" class="preview-image"></canvas>
+                <img id="capturedPreview" class="preview-image" style="display: none;">
+            </div>
+        </div>
+
+        <!-- Upload section -->
+        <div id="uploadSection" style="display: none;">
+            <div class="text-center mb-3">
+                <input type="file" id="uploadInput" style="display: none;" accept="image/*">
+                <button id="uploadButton" class="btn btn-secondary upload-btn"><i class="fas fa-cloud-upload-alt"></i> Choose File</button>
+            </div>
+            <div class="preview-container">
+                <img id="imagePreview" class="preview-image" src="" alt="Preview Image" style="display: none;">
+            </div>
+        </div>
+
+        <!-- Result section -->
+        <div id="resultContainer" class="mt-4 text-center">
+            <h3>Result:</h3>
+            <div id="resultDisplay">
+                <p id="resultText" class="result-text"></p>
+                <div class="image-container">
+                    <img id="imagePreviewResult" class="preview-image" style="display: none;">
+                    <img id="outputImage" class="output-image" style="display: none;">
+                </div>
+                <div class="reupload-btn-container">
+                    <button id="reuploadButton" class="btn btn-secondary reupload-btn" style="display: none;"><i class="fas fa-redo"></i> Reupload Image</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Font Awesome -->
+    <script src="https://kit.fontawesome.com/a076d05399.js"></script>
+    <!-- Bootstrap and jQuery -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        let mediaStream = null;
+        let isCapturing = false;
+
+        // Function to start camera preview
+        function startCamera() {
+            navigator.mediaDevices.getUserMedia({ video: true })
+                .then(function (stream) {
+                    mediaStream = stream;
+                    var video = document.getElementById('cameraPreview');
+                    video.srcObject = stream;
+                    video.autoplay = true;
+                    video.className = 'preview-image';
+                    video.style.display = 'block';
+                    document.getElementById('startCapture').style.display = 'none';
+                    document.getElementById('stopCapture').style.display = 'inline-block';
+                    document.getElementById('captureImage').style.display = 'inline-block';
+                })
+                .catch(function (error) {
+                    console.error('Error accessing camera:', error);
+                });
+        }
+
+        // Function to stop camera preview
+        function stopCamera() {
+            if (mediaStream) {
+                mediaStream.getTracks().forEach(track => track.stop());
+                mediaStream = null;
+                var video = document.getElementById('cameraPreview');
+                video.srcObject = null;
+                video.style.display = 'none';
+                document.getElementById('startCapture').style.display = 'inline-block';
+                document.getElementById('stopCapture').style.display = 'none';
+                document.getElementById('captureImage').style.display = 'none';
+            }
+        }
+
+        // Function to capture image from camera
+        function captureImage() {
+            var video = document.getElementById('cameraPreview');
+            var canvas = document.getElementById('canvasPreview');
+            var capturedImage = document.getElementById('capturedPreview');
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            var context = canvas.getContext('2d');
+            context.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+            var imageDataURL = canvas.toDataURL('image/jpeg');
+            capturedImage.src = imageDataURL;
+            capturedImage.style.display = 'block';
+            document.getElementById('cameraPreview').style.display = 'none';
+
+            // Display preview and output image
+            var imagePreviewResult = document.getElementById('imagePreviewResult');
+            var outputImage = document.getElementById('outputImage');
+            imagePreviewResult.src = imageDataURL;
+            imagePreviewResult.style.display = 'block';
+            outputImage.style.display = 'none';
+
+            // Send image data to server for processing
+            fetch('/pest-section', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ image: imageDataURL })
+            })
+            .then(response => response.json())
+            .then(data => {
+                displayProcessedResult(data);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        }
+
+        // Function to handle image upload
+        function uploadImage(file) {
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                var imageDataURL = e.target.result;
+                displayImage(imageDataURL);
+            };
+            reader.readAsDataURL(file);
+        }
+
+        // Function to display image preview and send to server
+        function displayImage(imageDataURL) {
+            var imagePreview = document.getElementById('imagePreview');
+            imagePreview.src = imageDataURL;
+            imagePreview.style.display = 'block';
+
+            // Send image data to server for processing
+            fetch('/pest-section', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ image: imageDataURL })
+            })
+            .then(response => response.json())
+            .then(data => {
+                displayProcessedResult(data);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        }
+
+        // Function to display processed result
+        function displayProcessedResult(data) {
+            // Update result text
+            document.getElementById('resultText').textContent = data.result;
+
+            // Display processed image with bounding boxes if available
+            if (data.processedImage) {
+                var outputImage = document.getElementById('outputImage');
+                outputImage.src = data.processedImage;
+                outputImage.style.display = 'block';
+            }
+
+            // Show reupload button
+            var reuploadButton = document.getElementById('reuploadButton');
+            reuploadButton.style.display = 'block';
+        }
+
+        // Event listeners for capture and upload choices
+        document.addEventListener('DOMContentLoaded', function () {
+            // Show capture section when Capture Image button is clicked
+            document.getElementById('captureChoice').addEventListener('click', function () {
+                document.getElementById('captureSection').style.display = 'block';
+                document.getElementById('uploadSection').style.display = 'none';
+            });
+
+            // Show upload section when Upload Image button is clicked
+            document.getElementById('uploadChoice').addEventListener('click', function () {
+                document.getElementById('captureSection').style.display = 'none';
+                document.getElementById('uploadSection').style.display = 'block';
+                stopCamera(); // Stop camera when switching to upload section
+            });
+
+            // Start capture button click event
+            document.getElementById('startCapture').addEventListener('click', function () {
+                startCamera();
+            });
+
+            // Stop capture button click event
+            document.getElementById('stopCapture').addEventListener('click', function () {
+                stopCamera();
+            });
+
+            // Capture image button click event
+            document.getElementById('captureImage').addEventListener('click', function () {
+                captureImage();
+            });
+
+            // Capture canvas click event
+            document.getElementById('canvasPreview').addEventListener('click', function () {
+                if (isCapturing) {
+                    captureImage();
+                }
+            });
+
+            // Upload button click event
+            document.getElementById('uploadButton').addEventListener('click', function () {
+                document.getElementById('uploadInput').click();
+            });
+
+            // Handle file selection for upload
+            document.getElementById('uploadInput').addEventListener('change', function (e) {
+                var file = e.target.files[0];
+                if (file) {
+                    uploadImage(file);
+                }
+            });
+
+            // Reupload button click event
+            document.getElementById('reuploadButton').addEventListener('click', function () {
+                location.reload();
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yield Prediction - EcoAgriSpectra AI</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-image: url('../static/images/y.jpg');
+            background-size: cover;
+            background-repeat: repeat;
+            background-attachment: fixed;
+            color: #333;
+        }
+
+        .main-content {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            margin-top: 30px;
+            max-width: 800px;
+            margin: 30px auto;
+        }
+
+        .form-description {
+            font-size: 16px;
+            color: #6c757d;
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            font-weight: bold;
+        }
+
+        .navbar-brand, .nav-link {
+            font-size: 18px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: auto;
+        }
+
+        .result-container {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .result-text {
+            font-size: 48px;
+            font-weight: bold;
+            color: #007bff;
+        }
+
+        .scrollable-container {
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <a class="navbar-brand" href="/">EcoAgriSpectra AI</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="/">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/disease-section">Crop Disease Detection</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/pest-section">Pest Detection</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/yield-section">Yield Prediction</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/soil-section">Soil Health Monitoring</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="main-content scrollable-container">
+            <h1 class="text-center mt-3 mb-4">Yield Prediction</h1>
+
+            <p class="form-description">
+                Please enter the details below to predict the yield. Ensure the values are within the specified ranges for accurate results.
+            </p>
+
+            <form method="POST" action="/yield-section">
+                <div class="form-group">
+                    <label for="crop">Crop</label>
+                    <select class="form-control" id="crop" name="crop" required>
+                        <option value="0">Arecanut</option>
+                        <option value="1">Arhar/Tur</option>
+                        <option value="2">Bajra</option>
+                        <option value="3">Banana</option>
+                        <option value="4">Barley</option>
+                        <option value="5">Black pepper</option>
+                        <option value="6">Cardamom</option>
+                        <option value="7">Cashewnut</option>
+                        <option value="8">Castor seed</option>
+                        <option value="9">Coconut</option>
+                        <option value="10">Coriander</option>
+                        <option value="11">Cotton(lint)</option>
+                        <option value="12">Cowpea(Lobia)</option>
+                        <option value="13">Dry chillies</option>
+                        <option value="14">Garlic</option>
+                        <option value="15">Ginger</option>
+                        <option value="16">Gram</option>
+                        <option value="17">Groundnut</option>
+                        <option value="18">Guar seed</option>
+                        <option value="19">Horse-gram</option>
+                        <option value="20">Jowar</option>
+                        <option value="21">Jute</option>
+                        <option value="22">Khesari</option>
+                        <option value="23">Linseed</option>
+                        <option value="24">Maize</option>
+                        <option value="25">Masoor</option>
+                        <option value="26">Mesta</option>
+                        <option value="27">Moong(Green Gram)</option>
+                        <option value="28">Moth</option>
+                        <option value="29">Niger seed</option>
+                        <option value="30">Oilseeds total</option>
+                        <option value="31">Onion</option>
+                        <option value="32">Other Rabi pulses</option>
+                        <option value="33">Other Cereals</option>
+                        <option value="34">Other Kharif pulses</option>
+                        <option value="35">Other Summer Pulses</option>
+                        <option value="36">Peas & beans (Pulses)</option>
+                        <option value="37">Potato</option>
+                        <option value="38">Ragi</option>
+                        <option value="39">Rapeseed &Mustard</option>
+                        <option value="40">Rice</option>
+                        <option value="41">Safflower</option>
+                        <option value="42">Sannhamp</option>
+                        <option value="43">Sesamum</option>
+                        <option value="44">Small millets</option>
+                        <option value="45">Soyabean</option>
+                        <option value="46">Sugarcane</option>
+                        <option value="47">Sunflower</option>
+                        <option value="48">Sweet potato</option>
+                        <option value="49">Tapioca</option>
+                        <option value="50">Tobacco</option>
+                        <option value="51">Turmeric</option>
+                        <option value="52">Urad</option>
+                        <option value="53">Wheat</option>
+                        <option value="54">other oilseeds</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="season">Season</label>
+                    <select class="form-control" id="season" name="season" required>
+                        <option value="0">Autumn</option>
+                        <option value="1">Kharif</option>
+                        <option value="2">Rabi</option>
+                        <option value="3">Summer</option>
+                        <option value="4">Whole Year</option>
+                        <option value="5">Winter</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="state">State</label>
+                    <select class="form-control" id="state" name="state" required>
+                        <option value="0">Andhra Pradesh</option>
+                        <option value="1">Arunachal Pradesh</option>
+                        <option value="2">Assam</option>
+                        <option value="3">Bihar</option>
+                        <option value="4">Chhattisgarh</option>
+                        <option value="5">Delhi</option>
+                        <option value="6">Goa</option>
+                        <option value="7">Gujarat</option>
+                        <option value="8">Haryana</option>
+                        <option value="9">Himachal Pradesh</option>
+                        <option value="10">Jammu and Kashmir</option>
+                        <option value="11">Jharkhand</option>
+                        <option value="12">Karnataka</option>
+                        <option value="13">Kerala</option>
+                        <option value="14">Madhya Pradesh</option>
+                        <option value="15">Maharashtra</option>
+                        <option value="16">Manipur</option>
+                        <option value="17">Meghalaya</option>
+                        <option value="18">Mizoram</option>
+                        <option value="19">Nagaland</option>
+                        <option value="20">Odisha</option>
+                        <option value="21">Puducherry</option>
+                        <option value="22">Punjab</option>
+                        <option value="23">Rajasthan</option>
+                        <option value="24">Sikkim</option>
+                        <option value="25">Tamil Nadu</option>
+                        <option value="26">Telangana</option>
+                        <option value="27">Tripura</option>
+                        <option value="28">Uttar Pradesh</option>
+                        <option value="29">Uttarakhand</option>
+                        <option value="30">West Bengal</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="year">Year</label>
+                    <input type="number" class="form-control" id="year" name="year" min="1900" max="2100" step="1" required>
+                </div>
+                <div class="form-group">
+                    <label for="area">Area (in hectares)</label>
+                    <input type="number" class="form-control" id="area" name="area" min="0.5" max="50808100.0" step="0.01" required>
+                    <small class="form-text text-muted">Enter the area (0.5 - 50808100.0 hectares).</small>
+                </div>
+                <div class="form-group">
+                    <label for="production">Production (in tonnes)</label>
+                    <input type="number" class="form-control" id="production" name="production" min="0" max="6326000000" step="0.01" required>
+                    <small class="form-text text-muted">Enter the production (0 - 6326000000 tonnes).</small>
+                </div>
+                <div class="form-group">
+                    <label for="rainfall">Annual Rainfall (in mm)</label>
+                    <input type="number" class="form-control" id="rainfall" name="rainfall" min="301.3" max="6552.7" step="0.1" required>
+                    <small class="form-text text-muted">Enter the annual rainfall (301.3 - 6552.7 mm).</small>
+                </div>
+                <div class="form-group">
+                    <label for="fertilizer">Fertilizer (in kg)</label>
+                    <input type="number" class="form-control" id="fertilizer" name="fertilizer" min="54.17" max="4835406877.0" step="0.01" required>
+                    <small class="form-text text-muted">Enter the fertilizer amount (54.17 - 4835406877.0 kg).</small>
+                </div>
+                <div class="form-group">
+                    <label for="pesticide">Pesticide (in kg)</label>
+                    <input type="number" class="form-control" id="pesticide" name="pesticide" min="0.09" max="15750511.0" step="0.01" required>
+                    <small class="form-text text-muted">Enter the pesticide amount (0.09 - 15750511.0 kg).</small>
+                </div>
+                <button type="submit" class="btn btn-primary">Predict Yield</button>
+            </form>
+
+            {% if yield_prediction is not none %}
+            <div id="result" class="mt-4">
+                <h2 class="text-center">Predicted Yield:</h2>
+                <div class="result-container text-center">
+                    <span class="result-text">{{ yield_prediction }}</span>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

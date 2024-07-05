@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Soil Health Monitoring - EcoAgriSpectra AI</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-image: url('./static/images/soilbg1.jpg');
+            background-size: cover;
+            background-repeat: repeat;
+            background-attachment: fixed;
+            color: #333;
+        }
+
+        .main-content {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            margin-top: 30px;
+            max-width: 800px;
+            margin: 30px auto;
+        }
+
+        .form-description {
+            font-size: 16px;
+            color: #6c757d;
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            font-weight: bold;
+        }
+
+        .navbar-brand, .nav-link {
+            font-size: 18px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: auto;
+        }
+
+        .result-container {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .result-text {
+            font-size: 48px;
+            font-weight: bold;
+            color: #007bff;
+        }
+
+        .scrollable-container {
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <a class="navbar-brand" href="/">EcoAgriSpectra AI</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="/">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/disease-section">Crop Disease Detection</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/pest-section">Pest Detection</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/yield-section">Yield Prediction</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="main-content scrollable-container">
+            <h1 class="text-center mt-3 mb-4">Soil Health Monitoring</h1>
+
+            <p class="form-description">
+                Please enter the soil parameter values in the form below.This Ai can be used as an indicator of overall soil health. Ensure the values are within the specified ranges for accurate results.
+            </p>
+
+            <form method="POST">
+                <div class="form-group">
+                    <label for="N">N (Nitrogen)</label>
+                    <input type="number" class="form-control" id="N" name="N" min="6.00" max="383.00" step="0.01" required>
+                    <small class="form-text text-muted">Enter the nitrogen content in the soil (6.00 - 383.00 mg/kg).</small>
+                </div>
+                <div class="form-group">
+                    <label for="P">P (Phosphorous)</label>
+                    <input type="number" class="form-control" id="P" name="P" min="2.90" max="125.00" step="0.01" required>
+                    <small class="form-text text-muted">Enter the phosphorous content in the soil (2.90 - 125.00 mg/kg).</small>
+                </div>
+                <div class="form-group">
+                    <label for="K">K (Potassium)</label>
+                    <input type="number" class="form-control" id="K" name="K" min="11.00" max="887.00" step="0.01" required>
+                    <small class="form-text text-muted">Enter the potassium content in the soil (11.00 - 887.00 mg/kg).</small>
+                </div>
+                <div class="form-group">
+                    <label for="pH">pH (Soil Acidity)</label>
+                    <input type="number" class="form-control" id="pH" name="pH" min="0.90" max="11.15" step="0.01" required>
+                    <small class="form-text text-muted">Enter the pH level of the soil (0.90 - 11.15).</small>
+                </div>
+                <div class="form-group">
+                    <label for="EC">EC (Electrical Conductivity)</label>
+                    <input type="number" class="form-control" id="EC" name="EC" min="0.10" max="0.95" step="0.01" required>
+                    <small class="form-text text-muted">Enter the electrical conductivity of the soil (0.10 - 0.95 dS/m).</small>
+                </div>
+                <div class="form-group">
+                    <label for="OC">OC (Organic Carbon)</label>
+                    <input type="number" class="form-control" id="OC" name="OC" min="0.10" max="24.00" step="0.01" required>
+                    <small class="form-text text-muted">Enter the organic carbon content in the soil (0.10 - 24.00%).</small>
+                </div>
+                <div class="form-group">
+                    <label for="S">S (Sulfur)</label>
+                    <input type="number" class="form-control" id="S" name="S" min="0.64" max="31.00" step="0.01" required>
+                    <small class="form-text text-muted">Enter the sulfur content in the soil (0.64 - 31.00 mg/kg).</small>
+                </div>
+                <div class="form-group">
+                    <label for="Zn">Zn (Zinc)</label>
+                    <input type="number" class="form-control" id="Zn" name="Zn" min="0.07" max="42.00" step="0.01" required>
+                    <small class="form-text text-muted">Enter the zinc content in the soil (0.07 - 42.00 mg/kg).</small>
+                </div>
+                <div class="form-group">
+                    <label for="Fe">Fe (Iron)</label>
+                    <input type="number" class="form-control" id="Fe" name="Fe" min="0.21" max="44.00" step="0.01" required>
+                    <small class="form-text text-muted">Enter the iron content in the soil (0.21 - 44.00 mg/kg).</small>
+                </div>
+                <div class="form-group">
+                    <label for="Cu">Cu (Copper)</label>
+                    <input type="number" class="form-control" id="Cu" name="Cu" min="0.09" max="3.02" step="0.01" required>
+                    <small class="form-text text-muted">Enter the copper content in the soil (0.09 - 3.02 mg/kg).</small>
+                </div>
+                <div class="form-group">
+                    <label for="Mn">Mn (Manganese)</label>
+                    <input type="number" class="form-control" id="Mn" name="Mn" min="0.11" max="31.00" step="0.01" required>
+                    <small class="form-text text-muted">Enter the manganese content in the soil (0.11 - 31.00 mg/kg).</small>
+                </div>
+                <div class="form-group">
+                    <label for="B">B (Boron)</label>
+                    <input type="number" class="form-control" id="B" name="B" min="0.06" max="2.82" step="0.01" required>
+                    <small class="form-text text-muted">Enter the boron content in the soil (0.06 - 2.82 mg/kg).</small>
+                </div>
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+
+            {% if total_sum is not none %}
+            <div id="result" class="mt-4">
+                <h2 class="text-center">THE SOIL:</h2>
+                <div class="result-container text-center">
+                    <span class="result-text">{{ total_sum }}</span>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
